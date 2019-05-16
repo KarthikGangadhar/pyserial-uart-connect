@@ -4,9 +4,14 @@ import serial.tools.list_ports
 
 class SerialDevice(object):
 
-    def __init__(self, baudrate = None, port = None):
+    def __init__(self, baudrate = None, port = None, maxtime = None):
         try:
             self.Serial = serial.Serial()
+
+            if maxtime:    
+                self.maxtime = maxtime
+            else:
+                self.maxtime = 60
 
             #check and assign baudrate
             if baudrate is not None:    
@@ -40,10 +45,9 @@ class SerialDevice(object):
 
     def read_serial_data(self):
         data = []
-        max_time = 60
         start_time = time.time()
 
-        while (time.time() - start_time) < max_time:
+        while (time.time() - start_time) < self.maxtime:
             line_data = self.Serial.readline()
             print(line_data)
             data.append(line_data)
@@ -56,6 +60,9 @@ class SerialDevice(object):
 if __name__ == '__main__':
     port = None
     baudrate = None
-    device = SerialDevice(baudrate, port)
+    maxtime = None
+    device = SerialDevice(baudrate, port, maxtime)
     if device.isAvailabale():
+        device.write('b')
         device.read_serial_data()
+        device.write('b')
