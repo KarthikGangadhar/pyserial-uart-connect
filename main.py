@@ -43,8 +43,12 @@ class SerialDevice(object):
         except serial.SerialException:  # for some reason 'no backend available error can arise.
             return False
 
-    def read_serial_data(self):
+    def read_serial_data(self, time):
         data = []
+
+        if time is not None:
+            self.maxtime = time
+    
         start_time = time.time()
 
         while (time.time() - start_time) < self.maxtime:
@@ -64,5 +68,5 @@ if __name__ == '__main__':
     device = SerialDevice(baudrate, port, maxtime)
     if device.isAvailabale():
         device.write('b')
-        device.read_serial_data()
+        device.read_serial_data(maxtime)
         device.write('b')
